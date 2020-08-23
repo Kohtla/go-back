@@ -2,16 +2,18 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 
-from votes.models import User
+from votes.models import User, Answer
 from votes.serializers import UserSerializer
 
-class UserView(APIView):
+class VoteView(APIView):
 
     def post(self, request):
-        name = request.data.get('name', None)
-        if name:
-            user = User.objects.get_or_create(name=name)
-            serializer = UserSerializer(user)
-            return Response(user, status=status.HTTP_200_OK)
-        return Response({"error":"need some name"}, status=status.HTTP_400_BAD_REQUEST)
-        
+        answer_id = request.data.get('answer', None)
+        user_id = request.data.get('user', None)
+        answer = Answer.objects.get(id=answer_id)
+        user = User.objects.get(id=user_id)
+
+        answer.users.add(user)
+        answer.save()
+
+        return Response(status=status.HTTP_200_OK)

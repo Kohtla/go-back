@@ -9,5 +9,3 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'name', 'description', 'date_created', 'date_closed', 'answers')
-
-
